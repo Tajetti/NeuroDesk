@@ -5,6 +5,7 @@
   --sm-letter: #2a97ad;
   --title-letter: #112333;
   --description-letter: #5c6a78;
+  --text-button: #f8fdfe;
   --background-input: #f6f9fe;
   --border-color: #dce5e9;
   --primary-text: #172532;
@@ -13,6 +14,11 @@
   --control-shadow: rgba(23, 37, 50, 0.14);
   --page-max-width: 1600px;
   --page-padding: 80px;
+  --bg-button: #2094a9;
+  --document-bg: #e18881;
+  --image-bg: #6fb880;
+  --video-bg: #7ca5e9;
+  --audio-bg: #d7935a;
 }
 
 body {
@@ -26,4 +32,20 @@ body {
 
 input[type="search"]::-webkit-search-cancel-button {
   cursor: pointer;
+}
+.content-quantity {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 340px));
+  justify-content: center;
+  gap: 32px clamp(12px, 1vw, 20px);
+  padding-inline: clamp(16px, 5vw, var(--page-padding));
+}
+
+.card-config {
+  width: 340px;
+  max-width: 100%;
+  height: 80px;
+  border-radius: 20px;
+  background-color: white;
+  border: 1px solid #dee6e9;
 }

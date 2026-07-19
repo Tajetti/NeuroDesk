@@ -1,6 +1,10 @@
-import logo from '../assets/logo.png';
+import logo from '../../assets/logo.png';
 
-export default function Header() {
+type HeaderProps = {
+  onOpenMaterials: () => void;
+}
+
+export default function Header({ onOpenMaterials }: HeaderProps) {
   return (
     <header className="border-b border-slate-200 bg-white">
       <div className="mx-auto flex h-20 w-full max-w-[var(--page-max-width)] items-center justify-between px-[var(--page-padding)]">
@@ -24,7 +28,11 @@ export default function Header() {
             Biblioteca
           </button>
 
-          <button className="cursor-pointer font-medium text-slate-500 hover:text-slate-900">
+          <button 
+          type='button'
+          onClick={onOpenMaterials}
+          className="cursor-pointer font-medium text-slate-500 hover:text-slate-900"
+          >
             Materiais
           </button>
         </nav>
