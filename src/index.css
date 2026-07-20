@@ -33,6 +33,32 @@ body {
 input[type="search"]::-webkit-search-cancel-button {
   cursor: pointer;
 }
+
+.module-input {
+  width: 100%;
+  min-height: 48px;
+  box-sizing: border-box;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  background: var(--background-input);
+  padding-inline: 16px;
+  color: var(--primary-text);
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.module-input::placeholder {
+  color: var(--secondary-text);
+}
+
+.module-input:focus {
+  border-color: var(--logo-color);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(42, 151, 173, 0.12);
+}
+
 .content-quantity {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 340px));

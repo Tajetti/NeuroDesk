@@ -1,4 +1,8 @@
-export default function Main() {
+type MainProps = {
+  onOpenNewModule: () => void
+}
+
+export default function Main({ onOpenNewModule }: MainProps) {
   return (
     <main className="mx-auto w-full max-w-[var(--page-max-width)] px-[var(--page-padding)] py-16">
       <p className="text-[var(--sm-letter)] text-sm font-medium text-primary">Início</p>
@@ -33,6 +37,7 @@ export default function Main() {
 
         <button
           type="button"
+          onClick={onOpenNewModule}
           className="flex h-12 cursor-pointer items-center gap-2 rounded-2xl border-0 bg-white px-5 text-sm font-semibold text-[var(--primary-text)] shadow-[0_2px_8px_var(--control-shadow)] outline-none transition-shadow focus:ring-2 focus:ring-[var(--logo-color)]"
         >
           <span className="text-xl font-light">+</span>
