@@ -1,7 +1,30 @@
 import { ArrowLeft, Check, X } from "lucide-react";
+import type { FormEvent } from 'react';
+import type { CreateModuleInput } from "../../modules/moduleType";
+
 
 type NewModule = {
     onOpenLibrary: () => void
+}
+
+async function handleSubmit(
+    event: FormEvent<HTMLFormElement>,
+) {
+    event.preventDefault
+
+    const formData = new FormData(event.currentTarget)
+
+    const input: CreateModuleInput = {
+        name: String(formData.get("name")?? ""),
+        acronym: String(formData.get("acronym")?? ""),
+        summary: String(formData.get("summary")?? ""),
+        tag: String(formData.get("tag")?? "")
+    }
+
+    const createdModule = 
+        await window.modulesApi.create(input);
+
+    console.log("Módulo criado: ", createdModule )
 }
 
 export default function NewModule({ onOpenLibrary } : NewModule) {
@@ -30,7 +53,7 @@ export default function NewModule({ onOpenLibrary } : NewModule) {
                         Cadastre um transtorno para organizar informações e materiais de apoio.
                     </p>
 
-                    <form className="mt-9 rounded-[24px] border border-[var(--border-color)] bg-white p-5 shadow-[0_12px_35px_rgba(23,37,50,0.06)] sm:p-8">
+                    <form onSubmit={handleSubmit} className="mt-9 rounded-[24px] border border-[var(--border-color)] bg-white p-5 shadow-[0_12px_35px_rgba(23,37,50,0.06)] sm:p-8">
                         <div className="grid gap-6 sm:grid-cols-[1fr_180px]">
                             <Field label="Nome do transtorno" htmlFor="disorder-name">
                                 <input
@@ -38,15 +61,19 @@ export default function NewModule({ onOpenLibrary } : NewModule) {
                                     type="text"
                                     placeholder="Ex.: Transtorno do Espectro Autista"
                                     className="module-input"
+                                    name="name"
+                                    required
                                 />
                             </Field>
 
                             <Field label="Sigla do transtorno" htmlFor="disorder-acronym">
                                 <input
                                     id="disorder-acronym"
+                                    name="acronym"
                                     type="text"
                                     placeholder="Ex.: TEA"
                                     className="module-input uppercase"
+                                    required
                                 />
                             </Field>
                         </div>
@@ -58,6 +85,8 @@ export default function NewModule({ onOpenLibrary } : NewModule) {
                                     rows={5}
                                     placeholder="Descreva as principais características do transtorno..."
                                     className="module-input min-h-32 resize-y py-3"
+                                    required
+                                    name="summary"
                                 />
                             </Field>
                         </div>
@@ -69,6 +98,8 @@ export default function NewModule({ onOpenLibrary } : NewModule) {
                                     type="text"
                                     placeholder="Ex.: Neurodesenvolvimento"
                                     className="module-input"
+                                    name="tag"
+                                    required
                                 />
                             </Field>
                         </div>
@@ -84,7 +115,7 @@ export default function NewModule({ onOpenLibrary } : NewModule) {
                             </button>
 
                             <button
-                                type="button"
+                                type="submit"
                                 className="flex h-11 cursor-pointer items-center gap-2 rounded-xl bg-[var(--bg-button)] px-5 text-sm font-semibold text-white shadow-[0_3px_8px_var(--control-shadow)] transition hover:brightness-95 active:scale-[0.98]"
                             >
                                 <Check size={17} aria-hidden="true" />
