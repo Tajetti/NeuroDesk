@@ -9,6 +9,17 @@ contextBridge.exposeInMainWorld("modulesApi", {
             "modules:create",
             input,
         );
+    },
+
+    list(): Promise<Module[]>  {
+        return ipcRenderer.invoke("modules:list")
+    },
+
+    remove(id: string): Promise<boolean> {
+        return ipcRenderer.invoke(
+            "modules:delete",
+            id,
+        )
     }
 })
 

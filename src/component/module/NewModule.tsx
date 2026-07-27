@@ -2,32 +2,34 @@ import { ArrowLeft, Check, X } from "lucide-react";
 import type { FormEvent } from 'react';
 import type { CreateModuleInput } from "../../modules/moduleType";
 
-
-type NewModule = {
+type NewModuleProps = {
     onOpenLibrary: () => void
 }
 
-async function handleSubmit(
-    event: FormEvent<HTMLFormElement>,
-) {
-    event.preventDefault
+export default function NewModule({ onOpenLibrary } : NewModuleProps) {
+    async function handleSubmit(
+        event: FormEvent<HTMLFormElement>,
+    ) {
+        event.preventDefault()
 
-    const formData = new FormData(event.currentTarget)
+        const formData = new FormData(event.currentTarget)
 
-    const input: CreateModuleInput = {
-        name: String(formData.get("name")?? ""),
-        acronym: String(formData.get("acronym")?? ""),
-        summary: String(formData.get("summary")?? ""),
-        tag: String(formData.get("tag")?? "")
+        const input: CreateModuleInput = {
+            name: String(formData.get("name")?? ""),
+            acronym: String(formData.get("acronym")?? ""),
+            summary: String(formData.get("summary")?? ""),
+            tag: String(formData.get("tag")?? "")
+        }
+
+        try {
+            await window.modulesApi.create(input);
+
+            onOpenLibrary();
+        } catch(error) {
+            console.error("Erro ao criar módulo: ", error)
+        }
     }
 
-    const createdModule = 
-        await window.modulesApi.create(input);
-
-    console.log("Módulo criado: ", createdModule )
-}
-
-export default function NewModule({ onOpenLibrary } : NewModule) {
     return (
         <div className="min-h-screen bg-[var(--bg-color)]">
             <header className="border-b border-slate-200 bg-white">

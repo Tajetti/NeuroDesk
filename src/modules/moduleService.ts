@@ -1,14 +1,16 @@
 import { randomUUID } from 'node:crypto';
 import { createModule as saveModule } from './moduleRepository';
+import { listModule  as findAllModules} from './moduleRepository';
+import  { deleteModule as removeModules } from './moduleRepository';
 import type { CreateModuleInput, Module } from './moduleType';
 
 export function createModule(input: CreateModuleInput): Module  {
     const name = input.name.trim();
     const acronym = input.acronym.trim();
     const summary = input.summary.trim();
-    const tag = input.tag.trim();
+    const tag = input.tag.trim().toUpperCase();
 
-    if(!name || !acronym || !summary) {
+    if(!name || !acronym || !summary || !tag) {
         throw new Error("Todos os campos precisam estar preenchidos!")
     }
 
@@ -25,4 +27,24 @@ export function createModule(input: CreateModuleInput): Module  {
     }
 
     return saveModule(module)
+}
+
+export function listModules(): Module[] {
+    return  findAllModules();
+}
+
+export function deleteModule(id: string): boolean {
+    const normalizedId = id.trim()
+
+    if(!normalizedId) {
+        throw new Error("O ID do módulo é obrigatório")
+    }
+
+    const deleted = removeModules(normalizedId)
+
+    if(!deleted) {
+        throw new Error("Módulo não encontrado!")
+    }
+
+    return true
 }

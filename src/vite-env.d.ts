@@ -8,9 +8,9 @@ import type {
 declare global {
     interface Window {
         modulesApi: {
-            create(
-                input:CreateModuleInput,
-            ): Promise<Module>
+            create(input:CreateModuleInput): Promise<Module>
+            list(): Promise<Module[]>
+            remove(id: string): Promise<boolean>
         }
     }
 }
