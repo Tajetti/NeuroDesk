@@ -1,12 +1,21 @@
-import { AlertTriangle, Trash2, X } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
+
 import type { Module } from "../../modules/moduleType";
+import DeleteModuleDialog from './DeleteModuleDialog'
 
 type MainProps = {
   onOpenNewModule: () => void
+  onOpenModule: (module:Module) => void
 }
 
-export function ModuleList() {
+type ModuleListProps = {
+  onOpenModule: (module: Module) => void
+}
+
+export function ModuleList({
+  onOpenModule
+}: ModuleListProps) {
   const [modules, setModules] = useState<Module[]>([])
   const [moduleToDelete, setModuleToDelete] = useState<Module | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -60,6 +69,7 @@ export function ModuleList() {
         {modules.map((module) => (
           <article
             key={module.id}
+            onClick={() => onOpenModule(module)}
             className="group flex min-h-64 cursor-pointer flex-col rounded-3xl border border-[var(--border-color)] bg-white p-6 shadow-[0_10px_30px_rgba(23,37,50,0.05)] transition duration-200 hover:-translate-y-1 hover:border-[var(--logo-color)]/40 hover:shadow-[0_16px_36px_rgba(23,37,50,0.10)]"
           >
           <div className="flex items-start justify-between gap-4">
@@ -104,7 +114,7 @@ export function ModuleList() {
       </div>
 
       {moduleToDelete && (
-        <SureDelete
+        <DeleteModuleDialog
           moduleName={moduleToDelete.name}
           isDeleting={isDeleting}
           error={deleteError}
@@ -117,89 +127,7 @@ export function ModuleList() {
     </>
   )
 }
-
-type SureDeleteProps = {
-  moduleName: string
-  isDeleting: boolean
-  error: string
-  onCancel: () => void
-  onConfirm: () => void
-}
-
-function SureDelete({
-  moduleName,
-  isDeleting,
-  error,
-  onCancel,
-  onConfirm,
-}: SureDeleteProps) {
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-5"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onCancel()
-      }}
-    >
-      <section
-        role="alertdialog"
-        aria-modal="true"
-        aria-labelledby="sure-delete-title"
-        aria-describedby="sure-delete-description"
-        className="w-full max-w-md rounded-3xl bg-white p-7 shadow-2xl"
-      >
-        <div className="flex items-start justify-between">
-          <div className="flex size-12 items-center justify-center rounded-2xl bg-red-50 text-red-600">
-            <AlertTriangle size={23} aria-hidden="true" />
-          </div>
-          <button
-            type="button"
-            aria-label="Fechar"
-            disabled={isDeleting}
-            onClick={onCancel}
-            className="flex size-9 cursor-pointer items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <X size={18} aria-hidden="true" />
-          </button>
-        </div>
-
-        <h2 id="sure-delete-title" className="mt-5 text-xl font-semibold text-[var(--title-letter)]">
-          Excluir módulo?
-        </h2>
-        <p id="sure-delete-description" className="mt-2 text-sm leading-6 text-[var(--description-letter)]">
-          Tem certeza de que deseja excluir <strong>{moduleName}</strong>? Essa ação não pode ser desfeita.
-        </p>
-
-        {error && (
-          <p role="alert" className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
-            {error}
-          </p>
-        )}
-
-        <div className="mt-7 flex justify-end gap-3">
-          <button
-            type="button"
-            disabled={isDeleting}
-            onClick={onCancel}
-            className="h-11 cursor-pointer rounded-xl border border-[var(--border-color)] px-5 text-sm font-semibold hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Cancelar
-          </button>
-          <button
-            type="button"
-            disabled={isDeleting}
-            onClick={onConfirm}
-            className="flex h-11 cursor-pointer items-center gap-2 rounded-xl bg-red-600 px-5 text-sm font-semibold text-white hover:bg-red-700 disabled:cursor-wait disabled:opacity-70"
-          >
-            <Trash2 size={17} aria-hidden="true" />
-            {isDeleting ? "Excluindo..." : "Excluir módulo"}
-          </button>
-        </div>
-      </section>
-    </div>
-  )
-}
-
-export default function Main({ onOpenNewModule }: MainProps) {
+export default function Main({ onOpenNewModule, onOpenModule }: MainProps) {
   return (
     <main className="mx-auto w-full max-w-[var(--page-max-width)] px-[var(--page-padding)] py-16">
       <p className="text-[var(--sm-letter)] text-sm font-medium text-primary">Início</p>
@@ -242,7 +170,7 @@ export default function Main({ onOpenNewModule }: MainProps) {
         </button>
       </div>
 
-      <ModuleList />
+      <ModuleList onOpenModule={onOpenModule}/>
     </main>
   );
 }

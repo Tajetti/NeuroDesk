@@ -8,10 +8,13 @@ import ContentQuantity from './component/materials/ContentQuantity';
 import MaterialsTable from './component/materials/MaterialsTable';
 
 import NewModule from "./component/module/NewModule";
+import ModuleDetails from "./component/module/ModuleDetails";
+
+import type { Module } from './modules/moduleType'
 
 export default function App() {
-
     const [currentScreen, setCurrentScreen] = useState('library');
+    const [selectedModule, setSelectedModule] = useState<Module | null>(null)
 
     return (
         <div className="min-h-screen bg-[var(--bg-color)]">
@@ -19,7 +22,12 @@ export default function App() {
             {currentScreen == 'library' && (
                 <>
                 <HeaderLibrary onOpenMaterials={() => setCurrentScreen('materials')} />
-                <MainLibrary onOpenNewModule={() => setCurrentScreen('newModule')}/>
+                <MainLibrary 
+                    onOpenNewModule={() => setCurrentScreen('newModule')} 
+                    onOpenModule={(module) => { 
+                            setSelectedModule(module) 
+                            setCurrentScreen("moduleDetails") } }
+                />
                 </>
             )}
 
@@ -38,6 +46,11 @@ export default function App() {
                 </>
             )}
 
+            { currentScreen == 'moduleDetails' && selectedModule && (
+                    <ModuleDetails 
+                        module={selectedModule}
+                        onOpenLibrary={() => setCurrentScreen('library')} />
+            ) }
         </div>
     );
 }
