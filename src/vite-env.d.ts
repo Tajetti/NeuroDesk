@@ -2,7 +2,8 @@
 
 import type {
     CreateModuleInput,
-    Module
+    Module,
+    UpdateModuleInput
 } from './modules/moduleType';
 
 declare global {
@@ -11,6 +12,7 @@ declare global {
             create(input:CreateModuleInput): Promise<Module>
             list(): Promise<Module[]>
             remove(id: string): Promise<boolean>
+            update(module:UpdateModuleInput): Promise<Module>
         }
     }
 }

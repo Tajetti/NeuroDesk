@@ -73,3 +73,28 @@ export function deleteModule(id: string): boolean {
 
     return result.changes > 0
 }
+
+export function updateModule(module: Module): Module {
+    const database = getDatabase()
+
+    const statement = database.prepare(`
+        UPDATE modules
+            SET name = ?, acronym = ?, summary = ?, tag = ?, updated_at = ?
+            WHERE id = ?
+    `)
+
+    const result = statement.run(
+        module.name,
+        module.acronym,
+        module.summary,
+        module.tag,
+        module.updatedAt,
+        module.id,
+    )
+
+    if(result.changes === 0) {
+        throw new Error("Módulo não encontrado")
+    }
+
+    return module
+}

@@ -1,13 +1,14 @@
-import { Trash2 } from "lucide-react";
+import { Pen, Trash2 } from "lucide-react";
 import type { Module } from "../../modules/moduleType";
 
 type ModuleCardProps = {
     module: Module
     onOpen: (module: Module) => void
     onDelete: (module: Module) => void
+    onEdit: (module: Module) => void
 }
 
-export default function ModuleCard({module, onOpen, onDelete}: ModuleCardProps) {
+export default function ModuleCard({module, onOpen, onDelete, onEdit}: ModuleCardProps) {
     return (
         <article
             onClick={() => onOpen(module)}
@@ -36,18 +37,33 @@ export default function ModuleCard({module, onOpen, onDelete}: ModuleCardProps) 
               Abrir módulo
             </span>
 
-            <button
-              type="button"
-              title="Excluir módulo"
-              aria-label={`Excluir módulo ${module.name}`}
-              onClick={(event) => {
-                event.stopPropagation()
-                    onDelete(module)
-              }}
-              className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-xl text-slate-400 transition hover:bg-red-50 hover:text-red-500"
-            >
-              <Trash2 size={17} aria-hidden="true" />
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                title="Editar módulo"
+                aria-label={`Editar módulo ${module.name}`}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  onEdit(module)
+                }}
+                className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-xl text-slate-400 transition hover:bg-cyan-50 hover:text-cyan-500"
+              >
+                <Pen size={17} aria-hidden="true" />
+              </button>
+
+              <button
+                type="button"
+                title="Excluir módulo"
+                aria-label={`Excluir módulo ${module.name}`}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  onDelete(module)
+                }}
+                className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-xl text-slate-400 transition hover:bg-red-50 hover:text-red-500"
+              >
+                <Trash2 size={17} aria-hidden="true" />
+              </button>
+            </div>
           </div>
           </article>
     )

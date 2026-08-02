@@ -1,4 +1,7 @@
-import { Module } from "../../modules/moduleType"
+import { ArrowLeft } from "lucide-react"
+
+import type { Module } from "../../modules/moduleType"
+import ModuleSidebar from "./ModuleSidebar"
 
 type ModuleDetailsProps = {
     module: Module
@@ -8,20 +11,8 @@ type ModuleDetailsProps = {
 export default function ModuleDetails({ onOpenLibrary, module }: ModuleDetailsProps) {
     return (
         <div className="">
-            <header>
-                <button type='button' onClick={onOpenLibrary}>
-                    Voltar
-                </button>
-            </header>
-
-            <main>
-                <h1>Detalhes do módulo</h1>
-                <p> {module.name} </p>
-                <button type='button'>
-                    Adicionar material
-                </button>
-            </main>
-            
+            <ModuleSidebar onOpenLibrary={onOpenLibrary} 
+            module={module}/>
         </div>
     )
 }

@@ -1,6 +1,6 @@
 import { ipcMain } from "electron";
-import { createModule, listModules, deleteModule } from "./moduleService";
-import type { CreateModuleInput } from "./moduleType";
+import { createModule, listModules, deleteModule, updateModule } from "./moduleService";
+import type { CreateModuleInput, UpdateModuleInput } from "./moduleType";
 
 export function registerModuleHandler() {
     ipcMain.handle(
@@ -19,4 +19,11 @@ export function registerModuleHandler() {
         (_event, id: string) => {
             return deleteModule(id)
         })
+
+    ipcMain.handle(
+        "modules:update",
+        (_event, input: UpdateModuleInput) => {
+            return updateModule(input)
+        }
+    )
 }

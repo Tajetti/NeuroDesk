@@ -14,3 +14,12 @@ export type CreateModuleInput = {
     summary: string
     tag: string
 }
+
+export type UpdateModuleInput = {
+    id: string
+    name: string
+    acronym: string
+    summary: string
+    tag: string
+    createdAt: string
+}

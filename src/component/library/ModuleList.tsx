@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import type { Module } from "../../modules/moduleType";
 import DeleteModuleDialog from "./DeleteModuleDialog"
 import ModuleCard from "./ModuleCard";
+import EditModuleDialog from "./EditModuleDialog";
+
 
 type ModuleListProps = {
   onOpenModule: (module: Module) => void
@@ -15,6 +17,7 @@ export default function ModuleList({
   const [moduleToDelete, setModuleToDelete] = useState<Module | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState("")
+  const [moduleToEdit, setModuleToEdit] = useState<Module | null>(null)
 
   async function handleDelete() {
     if (!moduleToDelete || isDeleting) return
@@ -70,6 +73,9 @@ export default function ModuleList({
               setDeleteError("")
               setModuleToDelete(module)
             }}
+            onEdit={(module) => {
+              setModuleToEdit(module)
+            }}
           />
         ))}
       </div>
@@ -83,6 +89,21 @@ export default function ModuleList({
             if (!isDeleting) setModuleToDelete(null)
           }}
           onConfirm={handleDelete}
+        />
+      )}
+
+      {moduleToEdit && (
+        <EditModuleDialog
+          module={moduleToEdit}
+          onCancel={() => setModuleToEdit(null)}
+          onSave={(updatedModule) => {
+            setModules((currentModules) =>
+              currentModules.map((module) =>
+                module.id === updatedModule.id ? updatedModule : module
+              )
+            )
+            setModuleToEdit(null)
+          }}
         />
       )}
     </>

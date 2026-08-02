@@ -1,6 +1,6 @@
 import { AlertTriangle, Trash2, X } from "lucide-react";
 
-type DeleteModuleDialogProsp = {
+type DeleteModuleDialogProp = {
     moduleName: string,
     isDeleting: boolean,
     error: string,
@@ -14,7 +14,7 @@ export default function SureDelete({
   error,
   onCancel,
   onConfirm,
-}: DeleteModuleDialogProsp) {
+}: DeleteModuleDialogProp) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-5"
