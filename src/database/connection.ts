@@ -33,4 +33,18 @@ export function initializeDatabase() {
             updated_at text not null
         )
     `);
+
+    database.exec(`
+        create table if not exists sections(
+            id text primary key,
+            module_id text not null,
+            name text not null, 
+            position integer not null,
+            created_at text not null, 
+            updated_at text not null,
+            foreign key (module_id) 
+            references modules(id)
+            on delete cascade
+        )
+    `)
 }

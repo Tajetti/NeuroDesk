@@ -1,5 +1,3 @@
-import { ArrowLeft } from "lucide-react"
-
 import type { Module } from "../../modules/moduleType"
 import ModuleSidebar from "./ModuleSidebar"
 

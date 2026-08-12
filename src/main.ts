@@ -3,6 +3,7 @@ import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import { initializeDatabase } from './database/connection';
 import { registerModuleHandler } from './modules/moduleIpc';
+import { registerSectionHandler } from './sections/sectionIpc'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -40,7 +41,8 @@ const createWindow = () => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
   initializeDatabase();
-  registerModuleHandler()
+  registerModuleHandler();
+  registerSectionHandler();
   createWindow();
 });
 

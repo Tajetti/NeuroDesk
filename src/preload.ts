@@ -2,6 +2,7 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 import { contextBridge, ipcRenderer } from "electron";
 import type { CreateModuleInput, Module, UpdateModuleInput } from './modules/moduleType';
+import type { CreateSectionInput, Section } from "./sections/sectionType";
 
 contextBridge.exposeInMainWorld("modulesApi", {
     create(input:CreateModuleInput):Promise<Module> {
@@ -30,3 +31,25 @@ contextBridge.exposeInMainWorld("modulesApi", {
     }
 })
 
+contextBridge.exposeInMainWorld("sectionsApi", {
+    create(input:CreateSectionInput): Promise<Section> {
+        return ipcRenderer.invoke(
+            "sections:create",
+            input
+        )
+    },
+    
+    list(moduleId: string): Promise<Section[]> {
+        return ipcRenderer.invoke(
+            "sections:list",
+            moduleId
+        )
+    },
+
+    delete(id: string): Promise<boolean> {
+        return ipcRenderer.invoke(
+            "sections:delete",
+            id
+        )
+    }
+})

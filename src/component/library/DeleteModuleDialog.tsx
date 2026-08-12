@@ -66,6 +66,7 @@ export default function SureDelete({
           >
             Cancelar
           </button>
+          
           <button
             type="button"
             disabled={isDeleting}

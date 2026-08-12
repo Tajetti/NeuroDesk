@@ -19,6 +19,9 @@
   --image-bg: #6fb880;
   --video-bg: #7ca5e9;
   --audio-bg: #d7935a;
+  --onclicked-section: #caf1f0;
+  --hover-section: #e5f3f7;
+  --hover-section-delete: #f49e98;
 }
 
 body {

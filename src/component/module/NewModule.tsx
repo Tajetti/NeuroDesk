@@ -1,5 +1,5 @@
 import { ArrowLeft, Check, X } from "lucide-react";
-import type { FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import type { CreateModuleInput } from "../../modules/moduleType";
 
 type NewModuleProps = {
@@ -7,10 +7,13 @@ type NewModuleProps = {
 }
 
 export default function NewModule({ onOpenLibrary } : NewModuleProps) {
+    const [formError, setFormError] = useState("")
+
     async function handleSubmit(
         event: FormEvent<HTMLFormElement>,
     ) {
         event.preventDefault()
+        setFormError("")
 
         const formData = new FormData(event.currentTarget)
 
@@ -21,9 +24,18 @@ export default function NewModule({ onOpenLibrary } : NewModuleProps) {
             tag: String(formData.get("tag")?? "")
         }
 
+        if(!input.name.trim() || !input.summary.trim() || !input.acronym.trim() || !input.tag.trim()) {
+            setFormError("Todos os campos precisam estar preenchidos!")
+            return
+        }
+
+        if(input.tag.trim().length > 5) {
+            setFormError("A tag deve conter no máximo 5 caracteres")
+            return
+        }
+
         try {
             await window.modulesApi.create(input);
-
             onOpenLibrary();
         } catch(error) {
             console.error("Erro ao criar módulo: ", error)
@@ -104,6 +116,15 @@ export default function NewModule({ onOpenLibrary } : NewModuleProps) {
                                     required
                                 />
                             </Field>
+
+                            {formError && (
+                                <p
+                                    role="alert"
+                                    className="mt-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700"
+                                >
+                                    {formError}
+                                </p>
+                            )}
                         </div>
 
                         <div className="mt-8 flex flex-wrap justify-end gap-3 border-t border-[var(--border-color)] pt-6">

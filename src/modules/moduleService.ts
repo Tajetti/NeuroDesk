@@ -16,6 +16,10 @@ export function createModule(input: CreateModuleInput): Module  {
         throw new Error("Todos os campos precisam estar preenchidos!")
     }
 
+    if(tag.length > 5) {
+        throw new Error("O campo tag só pode conter 5 caracteres")
+    }
+
     const now = new Date().toISOString()
 
     const module: Module = {
@@ -63,6 +67,10 @@ export function updateModule(input: UpdateModuleInput): Module {
     }
     if(!name || !acronym || !summary || !tag) {
         throw new Error("Todos os campos precisam estar preenchidos!")
+    }
+
+    if(tag.length > 5) {
+        throw new Error("O campo tag só pode conter 5 caracteres")
     }
 
     const updatedModule: Module = {
