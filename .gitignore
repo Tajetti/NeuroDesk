@@ -90,3 +90,9 @@ typings/
 
 # Electron-Forge
 out/
+
+# SQLite database (may contain sensitive student data locally)
+database/*.db
+database/*.db-journal
+database/*.db-wal
+database/*.db-shm
