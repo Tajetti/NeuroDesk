@@ -1,6 +1,6 @@
 import { ipcMain } from "electron";
-import { createSection, listSections, deleteSection } from "./sectionService";
-import type { CreateSectionInput } from "./sectionType";
+import { createSection, listSections, deleteSection, editSection as updateSection, editSectionContent } from "./sectionService";
+import type { CreateSectionInput, UpdateSectionContentInput, UpdateSectionInput } from "./sectionType";
 
 export function registerSectionHandler() { 
     ipcMain.handle(
@@ -22,5 +22,17 @@ export function registerSectionHandler() {
         (_event, id: string) => {
             return deleteSection(id)
         }
+    )
+
+    ipcMain.handle(
+        "sections:update",
+        (_event, id: UpdateSectionInput) => {
+            return updateSection(id)
+        }
+    )
+
+    ipcMain.handle(
+        "sections:update-content",
+        (_event, input: UpdateSectionContentInput) => editSectionContent(input)
     )
 }

@@ -78,3 +78,14 @@ input[type="search"]::-webkit-search-cancel-button {
   background-color: white;
   border: 1px solid #dee6e9;
 }
+
+.notion-note .bn-container,
+.notion-note .bn-editor {
+  background: transparent;
+}
+
+.notion-note .bn-editor {
+  padding-inline: 0;
+  font-family: inherit;
+  color: var(--primary-text);
+}

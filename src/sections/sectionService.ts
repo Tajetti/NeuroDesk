@@ -4,9 +4,11 @@ import {
     createSection as saveSection, 
     getNextPosition, 
     listSection as findSectionsByModule,
-    deleteSection as removeSection
+    deleteSection as removeSection,
+    updateSection,
+    updateSectionContent as saveSectionContent
 } from "./sectionRepository"
-import type { CreateSectionInput, Section } from "./sectionType"
+import type { CreateSectionInput, Section, UpdateSectionContentInput, UpdateSectionInput, UpdateSectionType } from "./sectionType"
 
 export function createSection(input: CreateSectionInput): Section {
     const moduleId = input.moduleId.trim()
@@ -26,6 +28,7 @@ export function createSection(input: CreateSectionInput): Section {
         id: randomUUID(),
         moduleId,
         name,
+        content: JSON.stringify([{ type: "paragraph", content: "" }]),
         position: getNextPosition(moduleId),
         createdAt: now,
         updatedAt: now
@@ -58,4 +61,35 @@ export function deleteSection(id: string) {
     }
 
     return true
+}
+
+export function editSection(input: UpdateSectionInput): Section {
+    const id = input.id.trim()
+    const name = input.name.trim()
+
+    if(!id) {
+        throw new Error("O ID da seção é necessário")
+    }
+
+    if(!name) {
+        throw new Error("O name da seção é necessário")
+    }
+
+    const updatedSection: UpdateSectionType = {
+        id,
+        name,
+        updatedAt: new Date().toISOString()
+    }
+
+    return updateSection(updatedSection.id, updatedSection.name, updatedSection.updatedAt)
+}
+
+export function editSectionContent(input: UpdateSectionContentInput): Section {
+    const id = input.id.trim()
+
+    if (!id) {
+        throw new Error("O ID da seção é obrigatório")
+    }
+
+    return saveSectionContent(id, input.content, new Date().toISOString())
 }

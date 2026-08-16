@@ -15,6 +15,7 @@ export function getDatabase() {
     ) // aqui pegamos onde o projeto está e pegamos o caminho do arquivo neurodesk-dev.db
 
     database = new Database(databasePath); // estou passando um path para o Database, ele entra em contato com o sqlite. O sqlite retorna uma conexão e coloca dentro da database
+    database.pragma("foreign_keys = ON")
 
     return database; // retornamos o database
 }
@@ -39,6 +40,7 @@ export function initializeDatabase() {
             id text primary key,
             module_id text not null,
             name text not null, 
+            content text not null default '[{"type":"paragraph","content":""}]',
             position integer not null,
             created_at text not null, 
             updated_at text not null,
@@ -47,4 +49,44 @@ export function initializeDatabase() {
             on delete cascade
         )
     `)
+
+    const sectionColumns = database.pragma("table_info(sections)") as Array<{ name: string }>
+    const hasContentColumn = sectionColumns.some((column) => column.name === "content")
+
+    if (!hasContentColumn) {
+        database.exec(`
+            ALTER TABLE sections
+            ADD COLUMN content TEXT NOT NULL DEFAULT '[{"type":"paragraph","content":""}]'
+        `)
+    }
+
+    database.exec(`
+        CREATE TABLE IF NOT EXISTS notes(
+            id TEXT PRIMARY KEY,
+            section_id TEXT NOT NULL,
+            title TEXT NOT NULL,
+            content TEXT NOT NULL DEFAULT '',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            FOREIGN KEY (section_id)
+            REFERENCES sections(id)
+            ON DELETE CASCADE
+        )
+    `)
+
+    if (!hasContentColumn) {
+        database.exec(`
+            UPDATE sections
+            SET content = COALESCE(
+                (
+                    SELECT notes.content
+                    FROM notes
+                    WHERE notes.section_id = sections.id
+                    ORDER BY notes.updated_at DESC
+                    LIMIT 1
+                ),
+                content
+            )
+        `)
+    }
 }
