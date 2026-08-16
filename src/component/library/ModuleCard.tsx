@@ -19,9 +19,6 @@ export default function ModuleCard({module, onOpen, onDelete, onEdit}: ModuleCar
               <span className="block max-w-full truncate">{module.acronym}</span>
             </div>
 
-            <span className="inline-flex min-w-0 max-w-[70%] rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-[var(--description-letter)]">
-              <span className="block min-w-0 truncate">{module.tag}</span>
-            </span>
           </div>
 
           <h3 className="mt-5 line-clamp-2 min-h-[3.5rem] overflow-hidden break-words text-xl font-semibold leading-snug text-[var(--title-letter)] [overflow-wrap:anywhere]">
@@ -29,7 +26,7 @@ export default function ModuleCard({module, onOpen, onDelete, onEdit}: ModuleCar
           </h3>
 
           <p className="mt-3 line-clamp-3 overflow-hidden break-words text-sm leading-6 text-[var(--description-letter)] [overflow-wrap:anywhere]">
-            {module.summary}
+            {module.summary || "Sem resumo cadastrado."}
           </p>
 
           <div className="mt-auto flex items-center justify-between border-t border-slate-100 pt-4">

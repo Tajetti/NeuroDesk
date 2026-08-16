@@ -9,15 +9,11 @@ import type { UpdateModuleInput, CreateModuleInput, Module } from './moduleType'
 export function createModule(input: CreateModuleInput): Module  {
     const name = input.name.trim();
     const acronym = input.acronym.trim();
-    const summary = input.summary.trim();
-    const tag = input.tag.trim().toUpperCase();
+    const summary = (input.summary ?? "").trim();
+    const tag = "";
 
-    if(!name || !acronym || !summary || !tag) {
-        throw new Error("Todos os campos precisam estar preenchidos!")
-    }
-
-    if(tag.length > 5) {
-        throw new Error("O campo tag só pode conter 5 caracteres")
+    if(!name || !acronym) {
+        throw new Error("Nome e sigla precisam estar preenchidos!")
     }
 
     const now = new Date().toISOString()
@@ -59,18 +55,14 @@ export function updateModule(input: UpdateModuleInput): Module {
     const id = input.id.trim()
     const name = input.name.trim()
     const acronym = input.acronym.trim()
-    const summary = input.summary.trim()
-    const tag = input.tag.trim().toUpperCase()
+    const summary = (input.summary ?? "").trim()
+    const tag = ""
 
     if(!id) {
         throw new Error("O ID do módulo é obrigatório!")
     }
-    if(!name || !acronym || !summary || !tag) {
-        throw new Error("Todos os campos precisam estar preenchidos!")
-    }
-
-    if(tag.length > 5) {
-        throw new Error("O campo tag só pode conter 5 caracteres")
+    if(!name || !acronym) {
+        throw new Error("Nome e sigla precisam estar preenchidos!")
     }
 
     const updatedModule: Module = {

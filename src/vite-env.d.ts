@@ -14,6 +14,7 @@ import type {
 } from './sections/sectionType'
 
 import type { SaveMediaInput, SavedMedia } from './media/mediaType'
+import type { CreateGameInput, GameProject, UpdateGameInput } from './games/gameType'
 
 declare global {
     interface Window {
@@ -34,6 +35,12 @@ declare global {
 
         mediaApi: {
             save(input: SaveMediaInput): Promise<SavedMedia>
+        }
+        gamesApi: {
+            create(input: CreateGameInput): Promise<GameProject>
+            list(): Promise<GameProject[]>
+            update(input: UpdateGameInput): Promise<GameProject>
+            delete(id: string): Promise<boolean>
         }
         
     }

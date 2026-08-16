@@ -20,17 +20,11 @@ export default function NewModule({ onOpenLibrary } : NewModuleProps) {
         const input: CreateModuleInput = {
             name: String(formData.get("name")?? ""),
             acronym: String(formData.get("acronym")?? ""),
-            summary: String(formData.get("summary")?? ""),
-            tag: String(formData.get("tag")?? "")
+            summary: String(formData.get("summary")?? "")
         }
 
-        if(!input.name.trim() || !input.summary.trim() || !input.acronym.trim() || !input.tag.trim()) {
-            setFormError("Todos os campos precisam estar preenchidos!")
-            return
-        }
-
-        if(input.tag.trim().length > 5) {
-            setFormError("A tag deve conter no máximo 5 caracteres")
+        if(!input.name.trim() || !input.acronym.trim()) {
+            setFormError("Nome e sigla precisam estar preenchidos!")
             return
         }
 
@@ -93,30 +87,18 @@ export default function NewModule({ onOpenLibrary } : NewModuleProps) {
                         </div>
 
                         <div className="mt-6">
-                            <Field label="Resumo do transtorno" htmlFor="disorder-summary" hint="Apresente uma descrição breve e objetiva.">
+                            <Field label="Resumo do transtorno" htmlFor="disorder-summary" hint="Opcional: apresente uma descrição breve e objetiva." optional>
                                 <textarea
                                     id="disorder-summary"
                                     rows={5}
                                     placeholder="Descreva as principais características do transtorno..."
                                     className="module-input min-h-32 resize-y py-3"
-                                    required
                                     name="summary"
                                 />
                             </Field>
                         </div>
 
                         <div className="mt-6">
-                            <Field label="Tag do transtorno" htmlFor="disorder-tag" hint="Use uma categoria para facilitar a busca na biblioteca.">
-                                <input
-                                    id="disorder-tag"
-                                    type="text"
-                                    placeholder="Ex.: Neurodesenvolvimento"
-                                    className="module-input"
-                                    name="tag"
-                                    required
-                                />
-                            </Field>
-
                             {formError && (
                                 <p
                                     role="alert"
@@ -156,15 +138,16 @@ type FieldProps = {
     label: string;
     htmlFor: string;
     hint?: string;
+    optional?: boolean;
     children: React.ReactNode;
 };
 
-function Field({ label, htmlFor, hint, children }: FieldProps) {
+function Field({ label, htmlFor, hint, optional, children }: FieldProps) {
     return (
         <div>
             <label htmlFor={htmlFor} className="mb-2 block text-sm font-semibold text-[var(--primary-text)]">
                 {label}
-                <span className="ml-1 text-[var(--logo-color)]" aria-hidden="true">*</span>
+                {!optional && <span className="ml-1 text-[var(--logo-color)]" aria-hidden="true">*</span>}
             </label>
             {children}
             {hint && <p className="mt-2 text-xs text-[var(--secondary-text)]">{hint}</p>}

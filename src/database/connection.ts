@@ -89,4 +89,15 @@ export function initializeDatabase() {
             )
         `)
     }
+
+    database.exec(`
+        CREATE TABLE IF NOT EXISTS game_projects(
+            id TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            type TEXT NOT NULL,
+            config TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        )
+    `)
 }

@@ -31,7 +31,6 @@ export default function EditModuleDialog({
                 name: String(formData.get("name") ?? ""),
                 acronym: String(formData.get("acronym") ?? ""),
                 summary: String(formData.get("summary") ?? ""),
-                tag: String(formData.get("tag") ?? ""),
                 createdAt: module.createdAt
             })
 
@@ -80,14 +79,8 @@ export default function EditModuleDialog({
                     </div>
 
                     <div className="mt-5">
-                        <Field label="Resumo" htmlFor="edit-module-summary">
-                            <textarea id="edit-module-summary" name="summary" rows={5} defaultValue={module.summary} className="module-input min-h-32 resize-y py-3" required disabled={isSaving} />
-                        </Field>
-                    </div>
-
-                    <div className="mt-5">
-                        <Field label="Tag" htmlFor="edit-module-tag">
-                            <input id="edit-module-tag" name="tag" type="text" defaultValue={module.tag} className="module-input" required disabled={isSaving} />
+                        <Field label="Resumo" htmlFor="edit-module-summary" optional>
+                            <textarea id="edit-module-summary" name="summary" rows={5} defaultValue={module.summary} className="module-input min-h-32 resize-y py-3" disabled={isSaving} />
                         </Field>
                     </div>
 
@@ -118,14 +111,15 @@ type FieldProps = {
     label: string
     htmlFor: string
     children: ReactNode
+    optional?: boolean
 }
 
-function Field({ label, htmlFor, children }: FieldProps) {
+function Field({ label, htmlFor, children, optional }: FieldProps) {
     return (
         <div>
             <label htmlFor={htmlFor} className="mb-2 block text-sm font-semibold text-[var(--primary-text)]">
                 {label}
-                <span className="ml-1 text-[var(--logo-color)]" aria-hidden="true">*</span>
+                {!optional && <span className="ml-1 text-[var(--logo-color)]" aria-hidden="true">*</span>}
             </label>
             {children}
         </div>

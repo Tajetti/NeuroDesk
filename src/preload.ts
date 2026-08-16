@@ -4,6 +4,7 @@ import { contextBridge, ipcRenderer } from "electron";
 import type { CreateModuleInput, Module, UpdateModuleInput } from './modules/moduleType';
 import type { CreateSectionInput, Section, UpdateSectionContentInput, UpdateSectionInput } from "./sections/sectionType";
 import type { SaveMediaInput, SavedMedia } from "./media/mediaType";
+import type { CreateGameInput, GameProject, UpdateGameInput } from "./games/gameType";
 
 contextBridge.exposeInMainWorld("modulesApi", {
     create(input:CreateModuleInput):Promise<Module> {
@@ -72,5 +73,20 @@ contextBridge.exposeInMainWorld("sectionsApi", {
 contextBridge.exposeInMainWorld("mediaApi", {
     save(input: SaveMediaInput): Promise<SavedMedia> {
         return ipcRenderer.invoke("media:save", input)
+    }
+})
+
+contextBridge.exposeInMainWorld("gamesApi", {
+    create(input: CreateGameInput): Promise<GameProject> {
+        return ipcRenderer.invoke("games:create", input)
+    },
+    list(): Promise<GameProject[]> {
+        return ipcRenderer.invoke("games:list")
+    },
+    update(input: UpdateGameInput): Promise<GameProject> {
+        return ipcRenderer.invoke("games:update", input)
+    },
+    delete(id: string): Promise<boolean> {
+        return ipcRenderer.invoke("games:delete", id)
     }
 })

@@ -11,15 +11,13 @@ export type Module = {
 export type CreateModuleInput = { 
     name: string
     acronym: string
-    summary: string
-    tag: string
+    summary?: string
 }
 
 export type UpdateModuleInput = {
     id: string
     name: string
     acronym: string
-    summary: string
-    tag: string
+    summary?: string
     createdAt: string
 }

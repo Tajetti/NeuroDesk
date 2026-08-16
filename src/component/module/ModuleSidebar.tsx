@@ -137,9 +137,6 @@ export default function ModuleSidebar({ module, onOpenLibrary, selectedSection, 
                             {module.name}
                         </h2>
 
-                        <p className="mt-1 block max-w-full truncate text-sm text-[var(--description-letter)]">
-                            {module.tag}
-                        </p>
                     </div>
                 </div>
             </div>

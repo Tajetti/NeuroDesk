@@ -6,6 +6,7 @@ import { initializeDatabase } from './database/connection';
 import { registerModuleHandler } from './modules/moduleIpc';
 import { registerSectionHandler } from './sections/sectionIpc'
 import { registerMediaHandlers } from './media/mediaIpc'
+import { registerGameHandlers } from './games/gameIpc'
 
 function mediaContentType(fileName: string, destination: string | null) {
   if (fileName.includes('.audio.')) {
@@ -80,6 +81,7 @@ app.on('ready', () => {
   registerModuleHandler();
   registerSectionHandler();
   registerMediaHandlers();
+  registerGameHandlers();
   protocol.handle('neurodesk-media', async (request) => {
     const requestedUrl = new URL(request.url);
     const fileName = path.basename(decodeURIComponent(requestedUrl.pathname));

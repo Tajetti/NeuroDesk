@@ -9,6 +9,7 @@ import MaterialsTable from './component/materials/MaterialsTable';
 
 import NewModule from "./component/module/NewModule";
 import ModuleDetails from "./component/module/ModuleDetails";
+import GameStudio from "./component/games/GameStudio";
 
 import type { Module } from './modules/moduleType'
 
@@ -21,7 +22,7 @@ export default function App() {
 
             {currentScreen == 'library' && (
                 <>
-                <HeaderLibrary onOpenMaterials={() => setCurrentScreen('materials')} />
+                <HeaderLibrary onOpenGames={() => setCurrentScreen('games')} />
                 <MainLibrary 
                     onOpenNewModule={() => setCurrentScreen('newModule')} 
                     onOpenModule={(module) => { 
@@ -51,6 +52,10 @@ export default function App() {
                         module={selectedModule}
                         onOpenLibrary={() => setCurrentScreen('library')} />
             ) }
+
+            {currentScreen == 'games' && (
+                <GameStudio onBack={() => setCurrentScreen('library')} />
+            )}
         </div>
     );
 }

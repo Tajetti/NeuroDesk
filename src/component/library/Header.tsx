@@ -1,10 +1,10 @@
 import logo from '../../assets/logo.png';
 
 type HeaderProps = {
-  onOpenMaterials: () => void;
+  onOpenGames: () => void;
 }
 
-export default function Header({ onOpenMaterials }: HeaderProps) {
+export default function Header({ onOpenGames }: HeaderProps) {
   return (
     <header className="border-b border-slate-200 bg-white">
       <div className="mx-auto flex h-20 w-full max-w-[var(--page-max-width)] items-center justify-between px-[var(--page-padding)]">
@@ -30,10 +30,10 @@ export default function Header({ onOpenMaterials }: HeaderProps) {
 
           <button 
           type='button'
-          onClick={onOpenMaterials}
+          onClick={onOpenGames}
           className="cursor-pointer font-medium text-slate-500 hover:text-slate-900"
           >
-            Materiais
+            Jogos
           </button>
         </nav>
       </div>
