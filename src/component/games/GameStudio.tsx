@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react"
-import { ArrowLeft, BookOpen, Brain, CheckCircle2, CircleDot, Clock3, GitCompareArrows, Grid2X2, Grid3X3, ListOrdered, MoreHorizontal, PencilLine, Play, Plus, Save, Search, Shapes, Shuffle, Timer, Trash2, X } from "lucide-react"
+import { ArrowLeft, BookOpen, Brain, CheckCircle2, CircleDot, Clock3, GitCompareArrows, Grid2X2, ListOrdered, MoreHorizontal, PencilLine, Play, Plus, Save, Search, Shapes, Shuffle, Timer, Trash2, X } from "lucide-react"
 
 import type { GameProject, GameType } from "../../games/gameType"
 import GameConfigEditor from "./GameConfigEditor"
@@ -19,11 +19,18 @@ const templates: Array<{ type: GameType; title: string; description: string; gro
     { type: "wheel", title: "Roleta", description: "Sorteios, perguntas ou desafios", group: "Palavras e dinâmicas", icon: CircleDot },
     { type: "fill-blank", title: "Complete a frase", description: "Frases com palavras faltando", group: "Palavras e dinâmicas", icon: PencilLine },
     { type: "categories", title: "Classificação", description: "Organize itens em grupos", group: "Organização", icon: Shapes },
-    { type: "bingo", title: "Bingo", description: "Cartela para dinâmica em grupo", group: "Dinâmicas em sala", icon: Grid3X3 },
     { type: "rapid-response", title: "Resposta rápida", description: "Perguntas para revisão oral", group: "Dinâmicas em sala", icon: Timer }
+    ,{ type: "visual-choice", title: "Desafio visual", description: "Ache o diferente, objeto, quantidade ou item faltante", group: "Atenção e percepção", icon: Search }
+    ,{ type: "recall-sequence", title: "Repita a sequência", description: "Memorize e reproduza cores ou símbolos", group: "Atenção e percepção", icon: Grid2X2 }
+    ,{ type: "pattern", title: "Complete a sequência", description: "Reconheça e complete padrões lógicos", group: "Lógica e planejamento", icon: MoreHorizontal }
+    ,{ type: "word-search", title: "Caça-palavras", description: "Encontre palavras escondidas", group: "Linguagem", icon: Search }
+    ,{ type: "response-control", title: "Clique somente quando...", description: "Atenção e controle de resposta", group: "Atenção e percepção", icon: Timer }
+    ,{ type: "sound-match", title: "Som e imagem", description: "Escute e associe à opção correta", group: "Som e ritmo", icon: CircleDot }
+    ,{ type: "connect-dots", title: "Ligue os pontos", description: "Coordenação e percepção espacial", group: "Coordenação", icon: MoreHorizontal }
+    ,{ type: "face-builder", title: "Monte o rosto", description: "Monte a expressão da emoção indicada", group: "Emoções", icon: Brain }
 ]
 
-const groups = ["Perguntas e respostas", "Memorização", "Organização", "Palavras e dinâmicas", "Dinâmicas em sala"]
+const groups = ["Perguntas e respostas", "Memorização", "Organização", "Palavras e dinâmicas", "Dinâmicas em sala", "Atenção e percepção", "Lógica e planejamento", "Linguagem", "Som e ritmo", "Coordenação", "Emoções"]
 
 function templateFor(type: GameType) {
     return templates.find((template) => template.type === type) ?? templates[0]
@@ -87,9 +94,8 @@ export default function GameStudio({ onBack }: GameStudioProps) {
         setScreen("preview")
     }
 
-    async function createGame(type: GameType) {
-        const model = templateFor(type)
-        const created = await window.gamesApi.create({ name: `Nova atividade de ${model.title.toLocaleLowerCase("pt-BR")}`, type })
+    async function createGame(type: GameType, name: string) {
+        const created = await window.gamesApi.create({ name, type })
         setGames((current) => [created, ...current])
         setShowTemplates(false)
         openGame(created)
@@ -142,7 +148,7 @@ export default function GameStudio({ onBack }: GameStudioProps) {
 
             {screen === "library" && <Library games={filteredGames} total={games.length} search={search} onSearch={setSearch} onPlay={playGame} onEdit={openGame} onDelete={setGameToDelete} onCreate={() => setShowTemplates(true)} />}
             {draft && screen === "editor" && <Editor draft={draft} saveStatus={saveStatus} onChange={setDraft} onBack={() => persistBeforeLeaving("library")} onPreview={() => { setPreviewOrigin("editor"); persistBeforeLeaving("preview") }} onComplete={() => persistBeforeLeaving("library")} onDelete={deleteGame} />}
-            {draft && screen === "preview" && <Preview draft={draft} returnTo={previewOrigin} onBack={() => setScreen(previewOrigin)} />}
+            {draft && screen === "preview" && <Preview draft={draft} returnTo={previewOrigin} onBack={() => setScreen(previewOrigin)} onFinish={() => setScreen("library")} />}
             {showTemplates && <TemplateGallery onClose={() => setShowTemplates(false)} onChoose={createGame} />}
             {gameToDelete && <DeleteGameDialog game={gameToDelete} onCancel={() => setGameToDelete(null)} onConfirm={confirmLibraryDelete} />}
         </div>
@@ -206,7 +212,10 @@ function Editor({ draft, saveStatus, onChange, onBack, onPreview, onComplete, on
                 <section className="overflow-hidden rounded-3xl border border-[var(--border-color)] bg-white shadow-[0_12px_35px_rgba(23,37,50,0.05)]">
                     <div className="border-b border-[var(--border-color)] px-7 pb-7 pt-7">
                         <div className="flex items-center gap-3 text-sm font-medium text-[var(--sm-letter)]"><span className="flex size-9 items-center justify-center rounded-xl bg-[var(--logo-color)]/10 text-[var(--logo-color)]"><model.icon size={18} /></span>{model.title}</div>
-                        <input aria-label="Nome da atividade" value={draft.name} onChange={(event) => onChange({ ...draft, name: event.target.value })} className="mt-4 w-full border-none bg-transparent text-4xl font-semibold tracking-tight text-[var(--title-letter)] outline-none placeholder:text-[var(--secondary-text)]" placeholder="Nome da atividade" />
+                        <div className="group relative mt-4">
+                            <input aria-label="Nome da atividade" value={draft.name} onChange={(event) => onChange({ ...draft, name: event.target.value })} className="w-full border-none bg-transparent pr-12 text-4xl font-semibold tracking-tight text-[var(--title-letter)] outline-none placeholder:text-[var(--secondary-text)]" placeholder="Nome da atividade" />
+                            <PencilLine aria-hidden="true" size={22} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[var(--logo-color)] opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100" />
+                        </div>
                         <p className="mt-2 text-sm text-[var(--description-letter)]">As alterações são salvas automaticamente enquanto você edita.</p>
                     </div>
                     <div className="px-7 py-2 pb-9"><GameConfigEditor config={draft.config} onChange={(config) => onChange({ ...draft, config })} /></div>
@@ -249,20 +258,24 @@ function DeleteGameDialog({ game, onCancel, onConfirm }: { game: GameProject; on
     </div>
 }
 
-function Preview({ draft, returnTo, onBack }: { draft: GameProject; returnTo: "library" | "editor"; onBack: () => void }) {
-    return <div className="min-h-[calc(100vh-5rem)] bg-[var(--bg-color)]"><div className="border-b border-[var(--border-color)] bg-white px-6 py-3"><div className="mx-auto flex max-w-6xl items-center justify-between"><div><p className="text-xs font-semibold uppercase tracking-wide text-[var(--secondary-text)]">Modo de jogo</p><p className="mt-0.5 font-semibold text-[var(--title-letter)]">{draft.name}</p></div><button type="button" onClick={onBack} className="cursor-pointer rounded-xl border border-[var(--border-color)] px-4 py-2 text-sm font-semibold text-[var(--primary-text)] transition hover:bg-[var(--hover-section)]">{returnTo === "editor" ? "Voltar ao editor" : "Voltar às atividades"}</button></div></div><main className="mx-auto max-w-6xl px-6 py-10"><GamePlayer key={`${draft.id}-${JSON.stringify(draft.config)}`} config={draft.config} /></main></div>
+function Preview({ draft, returnTo, onBack, onFinish }: { draft: GameProject; returnTo: "library" | "editor"; onBack: () => void; onFinish: () => void }) {
+    return <div className="min-h-[calc(100vh-5rem)] bg-[var(--bg-color)]"><div className="border-b border-[var(--border-color)] bg-white px-6 py-3"><div className="mx-auto flex max-w-6xl items-center justify-between"><div><p className="text-xs font-semibold uppercase tracking-wide text-[var(--secondary-text)]">Modo de jogo</p><p className="mt-0.5 font-semibold text-[var(--title-letter)]">{draft.name}</p></div><button type="button" onClick={onBack} className="cursor-pointer rounded-xl border border-[var(--border-color)] px-4 py-2 text-sm font-semibold text-[var(--primary-text)] transition hover:bg-[var(--hover-section)]">{returnTo === "editor" ? "Voltar ao editor" : "Voltar às atividades"}</button></div></div><main className="mx-auto max-w-6xl px-6 py-10"><GamePlayer key={`${draft.id}-${JSON.stringify(draft.config)}`} config={draft.config} onExit={onFinish} /></main></div>
 }
 
-function TemplateGallery({ onClose, onChoose }: { onClose: () => void; onChoose: (type: GameType) => void }) {
+function TemplateGallery({ onClose, onChoose }: { onClose: () => void; onChoose: (type: GameType, name: string) => void }) {
+    const [selectedType,setSelectedType]=useState<GameType|null>(null)
+    const [name,setName]=useState("")
+    const selectTemplate=(type:GameType)=>{const template=templateFor(type);setSelectedType(type);setName(`Nova atividade de ${template.title.toLocaleLowerCase("pt-BR")}`)}
+    const selectedTemplate=selectedType?templateFor(selectedType):null
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-[var(--title-letter)]/40 px-4 py-10">
             <section className="mx-auto w-full max-w-4xl rounded-3xl bg-white shadow-[0_18px_50px_rgba(23,37,50,0.18)]">
-                <div className="flex items-start justify-between border-b border-[var(--border-color)] px-7 py-6"><div><p className="text-sm font-medium text-[var(--sm-letter)]">Jogos</p><h2 className="mt-1 text-2xl font-semibold tracking-tight text-[var(--title-letter)]">Criar uma atividade</h2><p className="mt-1 text-[var(--description-letter)]">Escolha o formato que combina melhor com a sua aula.</p></div><button type="button" aria-label="Fechar" onClick={onClose} className="cursor-pointer rounded-xl p-2 text-[var(--description-letter)] hover:bg-[var(--hover-section)]"><X size={20} /></button></div>
-                <div className="space-y-8 px-7 py-7">
+                <div className="flex items-start justify-between border-b border-[var(--border-color)] px-7 py-6"><div><p className="text-sm font-medium text-[var(--sm-letter)]">Jogos</p><h2 className="mt-1 text-2xl font-semibold tracking-tight text-[var(--title-letter)]">{selectedTemplate?"Nome da atividade":"Criar uma atividade"}</h2><p className="mt-1 text-[var(--description-letter)]">{selectedTemplate?`Defina como a atividade de ${selectedTemplate.title.toLocaleLowerCase("pt-BR")} aparecerá na lista.`:"Escolha o formato que combina melhor com a sua aula."}</p></div><button type="button" aria-label="Fechar" onClick={onClose} className="cursor-pointer rounded-xl p-2 text-[var(--description-letter)] hover:bg-[var(--hover-section)]"><X size={20} /></button></div>
+                {selectedTemplate&&selectedType?<form onSubmit={event=>{event.preventDefault();if(name.trim())onChoose(selectedType,name.trim())}} className="px-7 py-8"><label className="text-sm font-semibold text-[var(--primary-text)]">Nome da atividade<input autoFocus className="module-input mt-2" value={name} onChange={event=>setName(event.target.value)} placeholder="Digite um nome"/></label><div className="mt-6 flex justify-end gap-3"><button type="button" onClick={()=>setSelectedType(null)} className="cursor-pointer rounded-xl border border-[var(--border-color)] px-5 py-3 font-semibold text-[var(--description-letter)]">Voltar</button><button type="submit" disabled={!name.trim()} className="cursor-pointer rounded-xl bg-[var(--bg-button)] px-5 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-45">Criar atividade</button></div></form>:<div className="space-y-8 px-7 py-7">
                     {groups.map((group) => <div key={group}><h3 className="mb-3 text-sm font-semibold text-[var(--primary-text)]">{group}</h3><div className="grid gap-3 sm:grid-cols-2">
-                        {templates.filter((template) => template.group === group).map((template) => { const Icon = template.icon; return <button key={template.type} type="button" onClick={() => onChoose(template.type)} className="flex cursor-pointer items-center gap-4 rounded-2xl border border-[var(--border-color)] p-4 text-left transition hover:border-[var(--logo-color)] hover:bg-[var(--hover-section)]"><span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[var(--logo-color)]/10 text-[var(--logo-color)]"><Icon size={20} /></span><span className="min-w-0"><span className="block font-semibold text-[var(--title-letter)]">{template.title}</span><span className="mt-0.5 block text-sm text-[var(--description-letter)]">{template.description}</span></span></button> })}
+                        {templates.filter((template) => template.group === group).map((template) => { const Icon = template.icon; return <button key={template.type} type="button" onClick={() => selectTemplate(template.type)} className="flex cursor-pointer items-center gap-4 rounded-2xl border border-[var(--border-color)] p-4 text-left transition hover:border-[var(--logo-color)] hover:bg-[var(--hover-section)]"><span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[var(--logo-color)]/10 text-[var(--logo-color)]"><Icon size={20} /></span><span className="min-w-0"><span className="block font-semibold text-[var(--title-letter)]">{template.title}</span><span className="mt-0.5 block text-sm text-[var(--description-letter)]">{template.description}</span></span></button> })}
                     </div></div>)}
-                </div>
+                </div>}
             </section>
         </div>
     )

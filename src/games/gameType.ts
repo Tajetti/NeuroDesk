@@ -84,20 +84,78 @@ export type CategoriesGameConfig = {
     backgroundColor: string
 }
 
-export type BingoGameConfig = {
-    kind: "bingo"
-    words: Array<{ id: string; text: string }>
-    backgroundColor: string
-}
-
 export type RapidResponseGameConfig = {
     kind: "rapid-response"
     prompts: Array<{ id: string; question: string; answer: string }>
     backgroundColor: string
 }
 
-export type GameType = "memory" | "quiz" | "true-false" | "association" | "flashcards" | "sequence" | "scramble" | "wheel" | "fill-blank" | "categories" | "bingo" | "rapid-response"
-export type GameConfig = MemoryGameConfig | QuizGameConfig | TrueFalseGameConfig | AssociationGameConfig | FlashcardGameConfig | SequenceGameConfig | ScrambleGameConfig | WheelGameConfig | FillBlankGameConfig | CategoriesGameConfig | BingoGameConfig | RapidResponseGameConfig
+export type VisualChoiceGameConfig = {
+    kind: "visual-choice"
+    mode: "odd" | "find" | "count" | "missing"
+    rounds: Array<{ id: string; prompt: string; options: string[]; correctIndex: number }>
+    backgroundColor: string
+}
+
+export type RecallSequenceGameConfig = {
+    kind: "recall-sequence"
+    sequence: string[]
+    backgroundColor: string
+}
+
+export type PatternGameConfig = {
+    kind: "pattern"
+    rounds: Array<{ id: string; sequence: string; options: string[]; answer: string }>
+    backgroundColor: string
+}
+
+export type WordSearchGameConfig = {
+    kind: "word-search"
+    words: string[]
+    directions?: Array<"horizontal" | "vertical" | "diagonal">
+    allowReverse?: boolean
+    gridRows?: number
+    gridColumns?: number
+    backgroundColor: string
+}
+
+export type ResponseControlGameConfig = {
+    kind: "response-control"
+    target: string
+    distractors: string[]
+    rounds: number
+    roundSeconds: number
+    backgroundColor: string
+}
+
+export type SoundMatchGameConfig = {
+    kind: "sound-match"
+    rounds: Array<{ id: string; sound: string; options: string[]; correctIndex: number }>
+    backgroundColor: string
+}
+
+export type RhythmGameConfig = {
+    kind: "rhythm"
+    pattern: number[]
+    backgroundColor: string
+}
+
+export type ConnectDotsGameConfig = {
+    kind: "connect-dots"
+    points: Array<{ id: string; x: number; y: number }>
+    backgroundColor: string
+}
+
+export type FaceBuilderGameConfig = {
+    kind: "face-builder"
+    emotion: string
+    correctEyes: string
+    correctMouth: string
+    backgroundColor: string
+}
+
+export type GameType = "memory" | "quiz" | "true-false" | "association" | "flashcards" | "sequence" | "scramble" | "wheel" | "fill-blank" | "categories" | "rapid-response" | "visual-choice" | "recall-sequence" | "pattern" | "word-search" | "response-control" | "sound-match" | "rhythm" | "connect-dots" | "face-builder"
+export type GameConfig = MemoryGameConfig | QuizGameConfig | TrueFalseGameConfig | AssociationGameConfig | FlashcardGameConfig | SequenceGameConfig | ScrambleGameConfig | WheelGameConfig | FillBlankGameConfig | CategoriesGameConfig | RapidResponseGameConfig | VisualChoiceGameConfig | RecallSequenceGameConfig | PatternGameConfig | WordSearchGameConfig | ResponseControlGameConfig | SoundMatchGameConfig | RhythmGameConfig | ConnectDotsGameConfig | FaceBuilderGameConfig
 
 export type GameProject = {
     id: string

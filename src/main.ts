@@ -38,6 +38,7 @@ protocol.registerSchemesAsPrivileged([
       secure: true,
       supportFetchAPI: true,
       stream: true,
+      corsEnabled: true,
     },
   },
 ]);
@@ -87,6 +88,7 @@ app.on('ready', () => {
     const range = request.headers.get('range');
     const commonHeaders = {
       'Accept-Ranges': 'bytes',
+      'Access-Control-Allow-Origin': '*',
       'Content-Type': mediaContentType(fileName, request.headers.get('sec-fetch-dest')),
     };
 

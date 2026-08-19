@@ -59,8 +59,9 @@ export default function MemoryGamePlayer({ config, onFinish }: MemoryGamePlayerP
                         const cover = this.add.rectangle(0, 0, cardWidth, cardHeight, 0x2a97ad)
                         const question = this.add.text(0, 0, "?", { fontSize: "44px", color: "#ffffff", fontFamily: "Arial" }).setOrigin(0.5)
                         const label = this.add.text(0, card.imageUrl ? 58 : 0, card.label, { fontSize: "18px", color: "#172532", fontFamily: "Arial", align: "center", wordWrap: { width: 130 } }).setOrigin(0.5).setVisible(false)
-                        const image = card.imageUrl
-                            ? this.add.image(0, -15, `pair-${card.id}`).setDisplaySize(110, 110).setVisible(false)
+                        const textureKey = `pair-${card.id}`
+                        const image = card.imageUrl && this.textures.exists(textureKey)
+                            ? this.add.image(0, -15, textureKey).setDisplaySize(110, 110).setVisible(false)
                             : null
 
                         container.add([face, ...(image ? [image] : []), label, cover, question])

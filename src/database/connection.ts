@@ -1,18 +1,22 @@
 import Database from "better-sqlite3"; // import da biblioteca que controla o sqlite
 import path from "node:path"; // biblioteca para construir caminhos no node (compativel com mac, windows e linux)
+import { mkdirSync } from "node:fs";
+import { app } from "electron";
 
 let database : Database.Database | null = null; // Reservando uma variavel para conexao com o sqlite
 
 export function getDatabase() {
-    if(database){ 
-        return database 
+    if(database){
+        return database
     } // verificamos se já existe uma conexao. Se houver, retornamos o database
 
+    const databaseDirectory = path.join(app.getPath("userData"), "database")
+    mkdirSync(databaseDirectory, { recursive: true })
+
     const databasePath = path.join(
-        process.cwd(),
-        "database",
-        "neurodesk-dev.db"
-    ) // aqui pegamos onde o projeto está e pegamos o caminho do arquivo neurodesk-dev.db
+        databaseDirectory,
+        "neurodesk.db"
+    ) // pasta de dados do usuário do próprio SO (userData), separada do diretório do projeto
 
     database = new Database(databasePath); // estou passando um path para o Database, ele entra em contato com o sqlite. O sqlite retorna uma conexão e coloca dentro da database
     database.pragma("foreign_keys = ON")

@@ -1,3 +1,5 @@
+import path from 'node:path';
+import fs from 'node:fs/promises';
 import type { ForgeConfig } from '@electron-forge/shared-types';
 import { MakerSquirrel } from '@electron-forge/maker-squirrel';
 import { MakerZIP } from '@electron-forge/maker-zip';
@@ -5,6 +7,7 @@ import { MakerDeb } from '@electron-forge/maker-deb';
 import { MakerRpm } from '@electron-forge/maker-rpm';
 import { VitePlugin } from '@electron-forge/plugin-vite';
 import { FusesPlugin } from '@electron-forge/plugin-fuses';
+import { AutoUnpackNativesPlugin } from '@electron-forge/plugin-auto-unpack-natives';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
 
 const config: ForgeConfig = {
@@ -12,13 +15,26 @@ const config: ForgeConfig = {
     asar: true,
   },
   rebuildConfig: {},
+  hooks: {
+    // O plugin do Vite empacota só a pasta .vite/ (o bundle) e o package.json,
+    // então dependências nativas marcadas como "external" (better-sqlite3, que não
+    // pode ser incluída no bundle JS) precisam ser copiadas manualmente para dentro
+    // do pacote antes do asar ser gerado, senão o app quebra em runtime com
+    // "Cannot find module 'better-sqlite3'".
+    packageAfterCopy: async (_forgeConfig, buildPath) => {
+      const source = path.join(__dirname, 'node_modules', 'better-sqlite3');
+      const destination = path.join(buildPath, 'node_modules', 'better-sqlite3');
+      await fs.cp(source, destination, { recursive: true });
+    },
+  },
   makers: [
     new MakerSquirrel({}),
-    new MakerZIP({}, ['darwin']),
+    new MakerZIP({}, ['darwin', 'win32']),
     new MakerRpm({}),
     new MakerDeb({}),
   ],
   plugins: [
+    new AutoUnpackNativesPlugin({}),
     new VitePlugin({
       // `build` can specify multiple entry builds, which can be Main process, Preload scripts, Worker process, etc.
       // If you are familiar with Vite configuration, it will look really familiar.

@@ -4,6 +4,15 @@ import type { CreateGameInput, GameProject, UpdateGameInput } from "./gameType"
 
 function createDefaultConfig(type: CreateGameInput["type"]): GameProject["config"] {
     const backgroundColor = "#eef6f8"
+    if (type === "visual-choice") return { kind: "visual-choice", mode: "odd", backgroundColor, rounds: [{ id: randomUUID(), prompt: "Qual é o diferente?", options: ["🍎", "🍎", "🍐", "🍎"], correctIndex: 2 }] }
+    if (type === "recall-sequence") return { kind: "recall-sequence", backgroundColor, sequence: ["🔴", "🔵", "🟢", "🟡"] }
+    if (type === "pattern") return { kind: "pattern", backgroundColor, rounds: [{ id: randomUUID(), sequence: "🔴 🔵 🔴 🔵", options: ["🔴", "🔵", "🟢"], answer: "🔴" }] }
+    if (type === "word-search") return { kind: "word-search", backgroundColor, words: ["GATO", "BOLA", "CASA"], directions: ["horizontal", "vertical", "diagonal"], allowReverse: false, gridRows: 10, gridColumns: 10 }
+    if (type === "response-control") return { kind: "response-control", backgroundColor, target: "🟢", distractors: ["🔴", "🟡", "🔵"], rounds: 10, roundSeconds: 1.6 }
+    if (type === "sound-match") return { kind: "sound-match", backgroundColor, rounds: [{ id: randomUUID(), sound: "cachorro", options: ["🐱 Gato", "🐶 Cachorro", "🐦 Pássaro"], correctIndex: 1 }] }
+    if (type === "rhythm") return { kind: "rhythm", backgroundColor, pattern: [1, 2, 1, 1] }
+    if (type === "connect-dots") return { kind: "connect-dots", backgroundColor, points: [{ id: randomUUID(), x: 20, y: 70 }, { id: randomUUID(), x: 35, y: 25 }, { id: randomUUID(), x: 60, y: 20 }, { id: randomUUID(), x: 80, y: 70 }] }
+    if (type === "face-builder") return { kind: "face-builder", backgroundColor, emotion: "Feliz", correctEyes: "^ ^", correctMouth: "◡" }
     if (type === "quiz") return {
         kind: "quiz",
         backgroundColor,
@@ -64,11 +73,6 @@ function createDefaultConfig(type: CreateGameInput["type"]): GameProject["config
             { id: randomUUID(), name: "Frutas", items: ["Maçã", "Banana"] }
         ]
     }
-    if (type === "bingo") return {
-        kind: "bingo",
-        backgroundColor,
-        words: ["Escola", "Livro", "Lápis", "Caderno", "Professora", "Aluno", "Leitura", "Recreio", "Tarefa"].map((text) => ({ id: randomUUID(), text }))
-    }
     if (type === "rapid-response") return {
         kind: "rapid-response",
         backgroundColor,
@@ -100,7 +104,7 @@ export function createGame(input: CreateGameInput): GameProject {
 }
 
 export function listGames() {
-    return findGames()
+    return findGames().filter((game) => game.type !== "rhythm")
 }
 
 export function updateGame(input: UpdateGameInput): GameProject {
