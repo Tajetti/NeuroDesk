@@ -8,10 +8,11 @@ import EditModuleDialog from "./EditModuleDialog";
 
 type ModuleListProps = {
   onOpenModule: (module: Module) => void
+  search: string
 }
 
 export default function ModuleList({
-  onOpenModule
+  onOpenModule, search
 }: ModuleListProps) {
   const [modules, setModules] = useState<Module[]>([])
   const [moduleToDelete, setModuleToDelete] = useState<Module | null>(null)
@@ -50,6 +51,15 @@ export default function ModuleList({
     loadModules()
   }, [])
 
+  const normalizedSearch = search.trim().toLocaleLowerCase("pt-BR")
+
+  const filteredModules = modules.filter((module) => {
+    const name = module.name.toLocaleLowerCase("pt-BR")
+    const acronym = module.acronym.toLocaleLowerCase("pt-BR")
+
+    return name.includes(normalizedSearch) || acronym.includes(normalizedSearch)
+  })
+
   if (modules.length === 0) {
     return (
       <div className="mt-10 rounded-3xl border border-dashed border-[var(--border-color)] bg-white/60 px-6 py-12 text-center">
@@ -64,7 +74,7 @@ export default function ModuleList({
   return (
     <>
       <div className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-        {modules.map((module) => (
+        {filteredModules.map((module) => (
           <ModuleCard
             key={module.id}
             module={module}

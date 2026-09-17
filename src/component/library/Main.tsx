@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import type { Module } from "../../modules/moduleType";
 import ModuleList from "./ModuleList";
 
@@ -7,6 +9,8 @@ type MainProps = {
 }
 
 export default function Main({ onOpenNewModule, onOpenModule }: MainProps) {
+  const [search, setSearch] = useState("")
+
   return (
     <main className="mx-auto w-full max-w-[var(--page-max-width)] px-[var(--page-padding)] py-16">
       <p className="text-[var(--sm-letter)] text-sm font-medium text-primary">Início</p>
@@ -34,7 +38,9 @@ export default function Main({ onOpenNewModule, onOpenModule }: MainProps) {
 
           <input
             type="search"
-            placeholder="Pesquisar transtorno, sigla ou área..."
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Pesquisar transtorno ou sigla..."
             className="w-full bg-transparent text-sm text-[var(--primary-text)] outline-none placeholder:text-[var(--secondary-text)]"
           />
         </div>
@@ -49,7 +55,10 @@ export default function Main({ onOpenNewModule, onOpenModule }: MainProps) {
         </button>
       </div>
 
-      <ModuleList onOpenModule={onOpenModule}/>
+      <ModuleList 
+        onOpenModule={onOpenModule} 
+        search={search}
+      />
     </main>
   );
 }
