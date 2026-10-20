@@ -11,6 +11,9 @@ jobs:
   build-windows:
     runs-on: windows-latest
 
+    permissions:
+      contents: read
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,12 +27,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Windows
-        run: npx electron-forge make --platform win32 --arch x64
+      - name: Rebuild native modules
+        run: npx electron-rebuild -f -w better-sqlite3
 
-      - name: Upload Windows installer
+      - name: Build Windows installer
+        run: npm run make -- --platform win32 --arch x64
+
+      - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
           name: Neurodesk-Windows
-          path: out/make/**/*
+          path: |
+            out/make/**/*.exe
+            out/make/**/*.nupkg
+            out/make/**/*.zip
           if-no-files-found: error
