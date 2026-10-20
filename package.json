@@ -2,7 +2,7 @@
   "name": "neurodesk",
   "productName": "neurodesk",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "My Electron application descrffiption",
   "main": ".vite/build/main.js",
   "private": true,
   "scripts": {
@@ -14,8 +14,7 @@
   },
   "keywords": [],
   "author": {
-    "name": "Alvaro Tajetti",
-    "email": "talhettialvaro@gmail.com"
+    "name": "Alvaro Tajetti"
   },
   "license": "MIT",
   "devDependencies": {
